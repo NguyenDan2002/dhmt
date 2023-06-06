@@ -1,17 +1,20 @@
-﻿/*Chương trình chiếu sáng Blinn-Phong (Phong sua doi) cho hình lập phương đơn vị, điều khiển quay bằng phím x, y, z, X, Y, Z.*/
+/*Chương trình chiếu sáng Blinn-Phong (Phong sua doi) cho hình lập phương đơn vị, điều khiển quay bằng phím x, y, z, X, Y, Z.*/
 #include "stb_image.h"
+#include "FreeImage.h"
 #define STB_IMAGE_IMPLEMENTATION
 #define NumVertices 4506
 #include "Angel.h"  /* Angel.h là file tự phát triển (tác giả Prof. Angel), có chứa cả khai báo includes glew và freeglut*/
 // Khai báo biến tại đầu file
-GLuint ghe_texture_id;
+GLuint ChairTextureId;
 
+int textureWidth, textureHeight;
+const void* textureData;
 // Trong hàm initialize()
 void initialize() {
-	glGenTextures(1, &ghe_texture_id);
-	glBindTexture(GL_TEXTURE_2D, ghe_texture_id);
+	glGenTextures(1, &ChairTextureId);
+	glBindTexture(GL_TEXTURE_2D, ChairTextureId);
 	int width, height, channels;
-	unsigned char* image = stbi_load("D:\btlnhoms6\btl\OpenGL\skulluvmap.png", &width, &height, &channels, 0);
+	unsigned char* image = stbi_load("D:/btlnhoms6/btl/OpenGL/skulluvmap.png", &width, &height, &channels, 0);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	stbi_image_free(image);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -156,7 +159,49 @@ void shaderSetup(void)
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(1, 1, 1, 1);        /* Thiết lập màu trắng là màu xóa màn hình*/
 }
+void loadBMP(const char* file) {
+	FIBITMAP* image = FreeImage_Load(FIF_BMP, file, BMP_DEFAULT);
 
+	if (!image) {
+		cout << "ko load BMP file : "  << endl;
+			exit(1);
+	}
+
+	image = FreeImage_ConvertTo32Bits(image);
+
+	textureWidth = FreeImage_GetWidth(image);
+	textureHeight = FreeImage_GetHeight(image);
+	textureData = FreeImage_GetBits(image);
+
+	FreeImage_Unload(image);
+}
+void loadChairTexture() {
+	FIBITMAP* image = FreeImage_Load(FIF_BMP, "go.JPG", BMP_DEFAULT);
+
+	if (!image) {
+		cout << "Could not load chair texture file." << endl;
+		exit(1);
+	}
+
+	image = FreeImage_ConvertTo32Bits(image);
+	int textureWidth = FreeImage_GetWidth(image);
+	int textureHeight = FreeImage_GetHeight(image);
+	const void* textureData = FreeImage_GetBits(image);
+
+	glGenTextures(1, &ChairTextureId);
+	glBindTexture(GL_TEXTURE_2D, ChairTextureId);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, textureData);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	FreeImage_Unload(image);
+}
 void changeColor(GLfloat a, GLfloat b, GLfloat c) {
 	/* Khởi tạo các tham số chiếu sáng - tô bóng*/
 	point4 light_position(0.0, 2.0, 0.0, 1.0);
@@ -1455,7 +1500,7 @@ void matGhe(GLfloat w, GLfloat h, GLfloat l) {
 	glUniformMatrix4fv(model_loc, 1, GL_TRUE, ctm_phong * model * instance_room * instance_ghe * instance);
 	glUniform1i(glGetUniformLocation(program, "has_texture"), true);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, ghe_texture_id);
+	glBindTexture(GL_TEXTURE_2D, ChairTextureId);
 	glUniform1i(glGetUniformLocation(program, "tex"), 0);
 
 	// Vẽ ghế
@@ -1470,7 +1515,7 @@ void chanGhe(GLfloat w, GLfloat h, GLfloat l)
 	glUniformMatrix4fv(model_loc, 1, GL_TRUE, ctm_phong * model * instance_room * instance_ghe * instance);
 	glUniform1i(glGetUniformLocation(program, "has_texture"), true);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, ghe_texture_id);
+	glBindTexture(GL_TEXTURE_2D, ChairTextureId);
 	glUniform1i(glGetUniformLocation(program, "tex"), 0);
 
 	// Vẽ ghế
@@ -1480,6 +1525,7 @@ void chanGhe(GLfloat w, GLfloat h, GLfloat l)
 }
 void boGhe() {
 	instance_ghe = Identity();
+	glBindTexture(GL_TEXTURE_2D, ChairTextureId);
 	changeColor(250, 200, 35);
 	matGhe(0.4, 0.02, 0.4);		// mặt ghế
 	instance_ghe = Translate(0, 0.2, 0.19) * RotateX(-90);	// thành ghế
@@ -1492,6 +1538,7 @@ void boGhe() {
 	chanGhe(0.03, 0.3, 0.03);
 	instance_ghe = Translate(0.185, -0.16, 0.185);	// phải sau
 	chanGhe(0.03, 0.3, 0.03);
+	glPopMatrix();
 }
 GLfloat HS = -0.8;
 GLfloat bd = -4.8;
@@ -1696,7 +1743,7 @@ void display(void)
 	vec4 up(0, 1, 0, 1);
 	view = LookAt(eye, at, up);
 	glUniformMatrix4fv(view_loc, 1, GL_TRUE, view);
-
+	boGhe();
 	projection = Frustum(l, r, bottom, top, zNear, zFar);
 	glUniformMatrix4fv(projection_loc, 1, GL_TRUE, projection);
 	glutSwapBuffers();
@@ -1986,6 +2033,8 @@ int main(int argc, char **argv)
 	initGPUBuffers();
 	shaderSetup();
 	initialize();
+	loadBMP("go.JPG");
+	loadChairTexture();
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
 	glutReshapeFunc(reshape);
