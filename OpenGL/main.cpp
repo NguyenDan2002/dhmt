@@ -11,7 +11,7 @@ void initialize() {
 	glGenTextures(1, &ghe_texture_id);
 	glBindTexture(GL_TEXTURE_2D, ghe_texture_id);
 	int width, height, channels;
-	unsigned char* image = stbi_load("D:\btlnhoms6\btl\OpenGL\skulluvmap.png", &width, &height, &channels, 0);
+	unsigned char* image = stbi_load("D:/btlnhoms6/btl/OpenGL/skulluvmap.png", &width, &height, &channels, 0);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	stbi_image_free(image);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

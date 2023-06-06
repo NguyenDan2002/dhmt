@@ -1,7 +1,4 @@
-﻿  InitShader.cpp
-  main.cpp
-D:\btlnhoms6\btl\OpenGL\main.cpp(14,35): warning C4129: 'O': unrecognized character escape sequence
-D:\btlnhoms6\btl\OpenGL\main.cpp(14,35): warning C4129: 's': unrecognized character escape sequence
+﻿  main.cpp
 D:\btlnhoms6\btl\OpenGL\main.cpp(55,23): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
 D:\btlnhoms6\btl\OpenGL\main.cpp(163,41): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
 D:\btlnhoms6\btl\OpenGL\main.cpp(168,50): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
