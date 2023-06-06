@@ -126,6 +126,7 @@
     <None Include="vs.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\dhmt\OpenGL\OpenGL\OpenGL_demo\OpenGL_demo\include\stb_image.h" />
     <ClInclude Include="vector_matrix.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

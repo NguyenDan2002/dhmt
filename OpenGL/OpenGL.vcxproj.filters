@@ -34,5 +34,8 @@
     <ClInclude Include="vector_matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\dhmt\OpenGL\OpenGL\OpenGL_demo\OpenGL_demo\include\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

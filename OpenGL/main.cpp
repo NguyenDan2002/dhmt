@@ -1,8 +1,24 @@
 ﻿/*Chương trình chiếu sáng Blinn-Phong (Phong sua doi) cho hình lập phương đơn vị, điều khiển quay bằng phím x, y, z, X, Y, Z.*/
-
+#include "stb_image.h"
+#define STB_IMAGE_IMPLEMENTATION
+#define NumVertices 4506
 #include "Angel.h"  /* Angel.h là file tự phát triển (tác giả Prof. Angel), có chứa cả khai báo includes glew và freeglut*/
+// Khai báo biến tại đầu file
+GLuint ghe_texture_id;
 
-
+// Trong hàm initialize()
+void initialize() {
+	glGenTextures(1, &ghe_texture_id);
+	glBindTexture(GL_TEXTURE_2D, ghe_texture_id);
+	int width, height, channels;
+	unsigned char* image = stbi_load("D:\btlnhoms6\btl\OpenGL\skulluvmap.png", &width, &height, &channels, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	stbi_image_free(image);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
 // remember to prototype
 void generateGeometry(void);
 void initGPUBuffers(void);
@@ -1430,18 +1446,37 @@ void manmc_build() {
 	man_maychieu(0.5, chieu_dai, 0.002);
 }
 // ==========================GHẾ HS===================
+
+
 mat4 instance_ghe;
 void matGhe(GLfloat w, GLfloat h, GLfloat l) {
+	glActiveTexture(GL_TEXTURE0);
 	instance = Scale(w, h, l);
-	glUniformMatrix4fv(model_loc, 1, GL_TRUE, ctm_phong*model * instance_room * instance_ghe * instance);
-	//gửi thông tin ma trận biến đổi đến file shader
-	glDrawArrays(GL_TRIANGLES, 0, NumPoints);
+	glUniformMatrix4fv(model_loc, 1, GL_TRUE, ctm_phong * model * instance_room * instance_ghe * instance);
+	glUniform1i(glGetUniformLocation(program, "has_texture"), true);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, ghe_texture_id);
+	glUniform1i(glGetUniformLocation(program, "tex"), 0);
+
+	// Vẽ ghế
+	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+
+	// Hết việc vẽ, quay lại đoạn lệnh khác
 }
+
 void chanGhe(GLfloat w, GLfloat h, GLfloat l)
 {
 	instance = Scale(w, h, l);
-	glUniformMatrix4fv(model_loc, 1, GL_TRUE, ctm_phong* model * instance_room * instance_ghe * instance);
-	glDrawArrays(GL_TRIANGLES, 0, NumPoints);
+	glUniformMatrix4fv(model_loc, 1, GL_TRUE, ctm_phong * model * instance_room * instance_ghe * instance);
+	glUniform1i(glGetUniformLocation(program, "has_texture"), true);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, ghe_texture_id);
+	glUniform1i(glGetUniformLocation(program, "tex"), 0);
+
+	// Vẽ ghế
+	glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+
+	// Hết việc vẽ, quay lại đoạn lệnh khác
 }
 void boGhe() {
 	instance_ghe = Identity();
