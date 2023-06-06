@@ -121,6 +121,7 @@
   <ItemGroup>
     <ClCompile Include="InitShader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="stb_image.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fs.shader" />

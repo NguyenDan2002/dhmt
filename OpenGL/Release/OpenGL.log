@@ -669,6 +669,9 @@ D:\btlnhoms6\btl\OpenGL\main.cpp(1963,24): warning C4305: '*=': truncation from 
 D:\btlnhoms6\btl\OpenGL\main.cpp(1963,37): warning C4305: '*=': truncation from 'double' to 'GLfloat'
 D:\btlnhoms6\btl\OpenGL\main.cpp(1964,24): warning C4305: '*=': truncation from 'double' to 'GLfloat'
 D:\btlnhoms6\btl\OpenGL\main.cpp(1964,37): warning C4305: '*=': truncation from 'double' to 'GLfloat'
-main.obj : error LNK2001: unresolved external symbol _stbi_load
-main.obj : error LNK2001: unresolved external symbol _stbi_image_free
-D:\btlnhoms6\btl\Release\OpenGL.exe : fatal error LNK1120: 2 unresolved externals
+  Generating code
+  3 of 293 functions ( 1.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    5 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  OpenGL.vcxproj -> D:\btlnhoms6\btl\Release\OpenGL.exe
